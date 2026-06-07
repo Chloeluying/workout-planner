@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>卢莹 · 周一日程</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f0f4f8;
+  min-height: 100vh;
+  padding: 20px;
+  color: #1a202c;
+}
+.container { max-width: 680px; margin: 0 auto; }
+
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.header h1 {
+  font-size: 28px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+.header .date { color: #718096; font-size: 14px; }
+
+/* 时间段 */
+.block {
+  background: white;
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  margin-bottom: 12px;
+}
+.block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+.block-time {
+  font-size: 13px;
+  font-weight: 700;
+  color: #667eea;
+  letter-spacing: 1px;
+}
+.block-emoji { font-size: 20px; }
+.block-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 12px;
+}
+
+/* 勾选框清单 */
+.todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f4f8;
+}
+.todo-item:last-child { border-bottom: none; }
+.todo-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: #667eea;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.todo-item label {
+  font-size: 14px;
+  color: #4a5568;
+  cursor: pointer;
+  line-height: 1.5;
+  flex: 1;
+}
+.todo-item input:checked + label {
+  text-decoration: line-through;
+  color: #a0aec0;
+}
+.todo-item .tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.tag-blue { background: #ebf4ff; color: #3182ce; }
+.tag-green { background: #f0fff4; color: #38a169; }
+.tag-purple { background: #faf5ff; color: #805ad5; }
+.tag-orange { background: #fffaf0; color: #dd6b20; }
+.tag-pink { background: #fff5f5; color: #e53e3e; }
+
+/* 进度条 */
+.progress-bar {
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  margin: 12px 0 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+  transition: width 0.5s;
+  width: 0%;
+}
+.progress-text {
+  font-size: 11px;
+  color: #a0aec0;
+  text-align: right;
+}
+
+/* 每日占星模块 */
+.star-block {
+  background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+  border: 1.5px solid #e8e0f0;
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+.star-block h3 {
+  font-size: 15px;
+  color: #553c7b;
+  margin-bottom: 10px;
+}
+.star-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+}
+.star-item input[type="checkbox"] { accent-color: #764ba2; }
+.star-item label { font-size: 14px; color: #4a5568; cursor: pointer; }
+
+/* 本周一览 */
+.week-grid {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 0 8px;
+}
+.week-day {
+  min-width: 72px;
+  background: white;
+  border-radius: 12px;
+  padding: 10px 8px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.week-day .day-name { font-size: 12px; font-weight: 700; color: #667eea; }
+.week-day .day-num { font-size: 11px; color: #a0aec0; margin-bottom: 4px; }
+.week-day .day-tag { font-size: 10px; padding: 2px 6px; border-radius: 8px; }
+.week-day.today { border: 2px solid #667eea; }
+
+/* 底部 */
+.footer { text-align: center; padding: 20px; font-size: 12px; color: #a0aec0; }
+
+@media (max-width: 480px) {
+  body { padding: 12px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>📋 周一 · 日程清单</h1>
+    <div class="date">2026年6月8日（周一）</div>
+  </div>
+
+  <!-- 本周速览 -->
+  <div class="block" style="margin-bottom:16px">
+    <div class="block-title">📅 本周占星计划</div>
+    <div class="week-grid">
+      <div class="week-day today">
+        <div class="day-name">周一</div>
+        <div class="day-num">6/8</div>
+        <div class="day-tag" style="background:#faf5ff;color:#805ad5">第5节+第4节</div>
+      </div>
+      <div class="week-day">
+        <div class="day-name">周二</div>
+        <div class="day-num">6/9</div>
+        <div class="day-tag" style="background:#faf5ff;color:#805ad5">作业+第1节</div>
+      </div>
+      <div class="week-day">
+        <div class="day-name">周三</div>
+        <div class="day-num">6/10</div>
+        <div class="day-tag" style="background:#f0fff4;color:#38a169">第2-3节+实操</div>
+      </div>
+      <div class="week-day">
+        <div class="day-name">周四</div>
+        <div class="day-num">6/11</div>
+        <div class="day-tag" style="background:#f0fff4;color:#38a169">第5节重听+实操</div>
+      </div>
+      <div class="week-day">
+        <div class="day-name">周五</div>
+        <div class="day-num">6/12</div>
+        <div class="day-tag" style="background:#faf5ff;color:#805ad5">查缺补漏+实操</div>
+      </div>
+      <div class="week-day">
+        <div class="day-name">周六</div>
+        <div class="day-num">6/13</div>
+        <div class="day-tag" style="background:#fffaf0;color:#dd6b20">自由练习</div>
+      </div>
+      <div class="week-day">
+        <div class="day-name">周日</div>
+        <div class="day-num">6/14</div>
+        <div class="day-tag" style="background:#fffaf0;color:#dd6b20">新课+复盘</div>
+      </div>
+    </div>
+    <div class="block-time" style="font-size:11px;margin-top:4px">⭐ 今天标注了</div>
+  </div>
+
+  <!-- 进度 -->
+  <div class="block" style="margin-bottom:16px">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-text">今日进度：<span id="progressCount">0</span>/<span id="totalCount">0</span></div>
+  </div>
+
+  <!-- ========== 上午 ========== -->
+  <div class="block">
+    <div class="block-header">
+      <span class="block-time">🌅 7:10-12:00</span>
+      <span class="block-emoji">☀️</span>
+    </div>
+    <div class="block-title">跟门诊 · 上午</div>
+    <div class="todo-list" data-block="morning">
+      <div class="todo-item">
+        <input type="checkbox" id="m1"><label for="m1">7:10 出门，地铁+步行去医院 <span class="tag tag-blue">通勤</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="m2"><label for="m2">地铁上刷手机打标签 2-3个 <span class="tag tag-blue">碎片</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="m3"><label for="m3">8:00-12:00 【跟门诊】 <span class="tag tag-pink">固定</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="m4"><label for="m4">门诊间隙 → 打标签凑到 10-15个 <span class="tag tag-orange">打标签</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 中午 ========== -->
+  <div class="block">
+    <div class="block-header">
+      <span class="block-time">🌤 12:00-14:20</span>
+      <span class="block-emoji">🔭</span>
+    </div>
+    <div class="block-title">午休 + 占星复习</div>
+    <div class="todo-list" data-block="noon">
+      <div class="todo-item">
+        <input type="checkbox" id="n1"><label for="n1">12:00-12:30 吃午饭 🍚 <span class="tag tag-blue">休息</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="n2"><label for="n2">12:30-13:00 午休 😴 <span class="tag tag-blue">休息</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="n3"><label for="n3">13:00-14:00 【占星 · 第4节快速回顾】<br>📌 重点：弄清第4节核心框架+作业要求 <span class="tag tag-purple">占星</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="n4"><label for="n4">14:00-14:20 准备下午门诊 <span class="tag tag-blue">过渡</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 下午 ========== -->
+  <div class="block">
+    <div class="block-header">
+      <span class="block-time">🌆 14:30-17:30</span>
+      <span class="block-emoji">☁️</span>
+    </div>
+    <div class="block-title">跟门诊 · 下午</div>
+    <div class="todo-list" data-block="afternoon">
+      <div class="todo-item">
+        <input type="checkbox" id="a1"><label for="a1">14:30-17:30 【跟门诊】 <span class="tag tag-pink">固定</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="a2"><label for="a2">门诊间隙 → 打标签补齐到 30个 ✅ <span class="tag tag-orange">打标签</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="a3"><label for="a3">17:30 下班 🎉 <span class="tag tag-blue">收工</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 晚上 ========== -->
+  <div class="block">
+    <div class="block-header">
+      <span class="block-time">🌙 17:30-22:30</span>
+      <span class="block-emoji">💪</span>
+    </div>
+    <div class="block-title">晚间自由时间（重点）</div>
+    <div class="todo-list" data-block="evening">
+      <div class="todo-item">
+        <input type="checkbox" id="e1"><label for="e1">17:30-18:30 回家 + 吃晚饭 🍜 <span class="tag tag-blue">休息</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="e2"><label for="e2">18:30-20:30 【占星 · 第5节课完整看】🎯<br>📌 这是今晚重点任务，2小时完整过一遍新课 <span class="tag tag-purple">占星</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="e3"><label for="e3">20:30-20:40 休息一下 ☕ <span class="tag tag-blue">休息</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="e4"><label for="e4">20:40-21:10 【USMLE病理】30分钟<br>📌 B站看病理英语，重点：把英语单词和知识点挂上钩 <span class="tag tag-green">USMLE</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="e5"><label for="e5">21:10-21:40 【上肢日训练】💪<br>跪姿俯卧撑+背部+手臂 <span class="tag tag-pink">运动</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="e6"><label for="e6">21:40-22:00 【CMT文献】翻一篇，看Abstract+Figures <span class="tag tag-orange">文献</span></label>
+      </div>
+      <div class="todo-item">
+        <input type="checkbox" id="e7"><label for="e7">22:00-22:30 洗漱、收尾、复盘 ✅ <span class="tag tag-blue">收尾</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 今日占星 ========== -->
+  <div class="star-block">
+    <h3>🔭 今日占星任务拆解</h3>
+    <div class="star-item">
+      <input type="checkbox" id="s1"><label for="s1">中午（13:00-14:00）快速过第4节框架：记下作业要写什么</label>
+    </div>
+    <div class="star-item">
+      <input type="checkbox" id="s2"><label for="s2">晚上（18:30-20:30）完整看完第5节课</label>
+    </div>
+    <div class="star-item">
+      <input type="checkbox" id="s3"><label for="s3">记下第5节3个不理解/感兴趣的点，明天问或复习</label>
+    </div>
+  </div>
+
+  <!-- 重复一遍：现在就做什么 -->
+  <div class="block" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <div style="font-size:12px; opacity:0.8; letter-spacing:2px; margin-bottom:6px;">👉 现在就做</div>
+    <div style="font-size:18px; font-weight:700; margin-bottom:4px;">🛌 好好休息，明天早起</div>
+    <div style="font-size:13px; opacity:0.9;">定好7:00的闹钟，准备出门的东西（水杯、充电宝、耳机）</div>
+  </div>
+
+  <div class="footer">
+    勾选即完成 ✅ 加油卢莹！💪
+  </div>
+</div>
+
+<script>
+// 进度计算
+function updateProgress() {
+  const allItems = document.querySelectorAll('.todo-item input[type="checkbox"], .star-item input[type="checkbox"]');
+  const checked = document.querySelectorAll('.todo-item input[type="checkbox"]:checked, .star-item input[type="checkbox"]:checked');
+  const total = allItems.length;
+  const done = checked.length;
+  document.getElementById('progressCount').textContent = done;
+  document.getElementById('totalCount').textContent = total;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  // 保存到本地
+  const state = {};
+  allItems.forEach(cb => { state[cb.id] = cb.checked; });
+  localStorage.setItem('mondaySchedule', JSON.stringify(state));
+}
+
+// 恢复状态
+function restoreState() {
+  const saved = localStorage.getItem('mondaySchedule');
+  if (!saved) return;
+  const state = JSON.parse(saved);
+  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    if (state[cb.id] !== undefined) cb.checked = state[cb.id];
+  });
+}
+
+// 绑定事件
+document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', updateProgress);
+});
+
+restoreState();
+updateProgress();
+</script>
+</body>
+</html>
