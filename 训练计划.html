@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一周减脂训练计划</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f0f4f8;
+  padding: 20px;
+  color: #1a202c;
+}
+.container { max-width: 700px; margin: 0 auto; }
+
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.header h1 {
+  font-size: 26px;
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+.header p { color: #718096; font-size: 14px; }
+
+.day-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+.day-tab {
+  flex-shrink: 0;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 12px;
+  background: white;
+  color: #4a5568;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.day-tab.active {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+  box-shadow: 0 4px 12px rgba(245,87,108,0.3);
+}
+.day-tab:hover:not(.active) { background: #edf2f7; }
+.day-tab .day-label { font-size: 12px; opacity: 0.6; display: block; margin-top: 2px; }
+
+.workout-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  margin-bottom: 12px;
+}
+.workout-card .focus-area {
+  font-size: 13px;
+  color: #f5576c;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.workout-card h2 {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+.workout-card .tip {
+  font-size: 13px;
+  color: #718096;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.exercise { margin-bottom: 16px; }
+.exercise:last-child { margin-bottom: 0; }
+.exercise .name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 2px;
+}
+.exercise .detail {
+  font-size: 13px;
+  color: #718096;
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+.exercise .sets {
+  display: inline-block;
+  background: #fff5f5;
+  color: #e53e3e;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.video-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  background: #f0fff4;
+  color: #10b981;
+}
+.video-link:hover { background: #d1fae5; }
+
+.rest-card {
+  text-align: center;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.rest-card .emoji { font-size: 48px; margin-bottom: 12px; }
+.rest-card h2 { font-size: 20px; color: #2d3748; margin-bottom: 6px; }
+.rest-card p { font-size: 14px; color: #718096; line-height: 1.6; }
+
+.footer {
+  margin-top: 16px;
+  background: white;
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.footer h3 {
+  font-size: 14px;
+  color: #4a5568;
+  margin-bottom: 8px;
+}
+.footer .rule {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: #718096;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.footer .rule:last-child { margin-bottom: 0; }
+.footer .rule .icon { flex-shrink: 0; }
+
+@media (max-width: 480px) {
+  body { padding: 12px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>一周减脂训练计划</h1>
+    <p>上下肢分化 | 每个部位一周练2次 | 每次25分钟</p>
+  </div>
+
+  <div class="day-tabs" id="dayTabs">
+    <button class="day-tab active" data-day="mon" onclick="showDay('mon')">周一<span class="day-label">上肢日</span></button>
+    <button class="day-tab" data-day="tue" onclick="showDay('tue')">周二<span class="day-label">下肢日</span></button>
+    <button class="day-tab" data-day="wed" onclick="showDay('wed')">周三<span class="day-label">休息</span></button>
+    <button class="day-tab" data-day="thu" onclick="showDay('thu')">周四<span class="day-label">上肢日</span></button>
+    <button class="day-tab" data-day="fri" onclick="showDay('fri')">周五<span class="day-label">下肢日</span></button>
+    <button class="day-tab" data-day="sat" onclick="showDay('sat')">周六<span class="day-label">全身HIIT</span></button>
+    <button class="day-tab" data-day="sun" onclick="showDay('sun')">周日<span class="day-label">休息</span></button>
+  </div>
+
+  <div id="workoutContent"></div>
+
+  <div class="footer">
+    <h3>通用规则</h3>
+    <div class="rule"><span class="icon">🔥</span> 每组之间休息 30-60 秒</div>
+    <div class="rule"><span class="icon">💧</span> 训练前喝一杯水</div>
+    <div class="rule"><span class="icon">🔄</span> 做不了标准动作就用退阶版本（跪姿、辅助等）</div>
+    <div class="rule"><span class="icon">📌</span> 先搜抖音看视频学动作，再做</div>
+    <div class="rule"><span class="icon">🎯</span> 坚持比强度重要，做不完组数也 OK</div>
+  </div>
+</div>
+
+<script>
+const DY = 'https://www.douyin.com/search/';
+
+const workouts = {
+  mon: {
+    focus: '【上肢日】胸 + 背 + 手臂',
+    title: '周一：上肢日',
+    tip: '推拉结合，今天练到上半身所有主要肌群。先做推的动作（俯卧撑），再做拉的动作（划船），最后收手臂。',
+    exercises: [
+      {
+        name: '跪姿俯卧撑',
+        detail: '双膝跪地，双手略宽于肩，下压至胸口贴近地面，发力推起。感受胸部发力。',
+        sets: '3组 x 8-12次',
+        videos: [
+          { label: '抖音搜：跪姿俯卧撑教程', url: DY + '跪姿俯卧撑教程' },
+        ]
+      },
+      {
+        name: '门框划船',
+        detail: '站在门框前，双手抓住门框两侧与胸同高，身体后倾成直线，用背发力拉向门框。',
+        sets: '3组 x 力竭',
+        videos: [
+          { label: '抖音搜：门框划船 练背', url: DY + '门框划船 练背' },
+        ]
+      },
+      {
+        name: '椅子臂屈伸',
+        detail: '双手撑在椅子边缘，身体向前悬空，屈肘下放身体，感受三头肌发力。',
+        sets: '3组 x 8-12次',
+        videos: [
+          { label: '抖音搜：椅子臂屈伸 三头肌', url: DY + '椅子臂屈伸 三头肌' },
+        ]
+      },
+      {
+        name: '超人式',
+        detail: '俯卧在地上，双手向前伸直，同时抬起手臂和腿，背部收紧，保持3秒。背部收尾动作。',
+        sets: '2组 x 10次（保持3秒）',
+        videos: [
+          { label: '抖音搜：超人式 背部激活', url: DY + '超人式 背部激活' },
+        ]
+      },
+    ]
+  },
+  tue: {
+    focus: '【下肢日】臀 + 腿 + 核心',
+    title: '周二：下肢日',
+    tip: '下肢肌肉群是全身最大的，练好下肢代谢提升最快。深蹲是动作之王，做标准比做多重更重要。',
+    exercises: [
+      {
+        name: '自重深蹲',
+        detail: '双脚与肩同宽，屈髋屈膝下蹲至大腿平行地面，站起时夹臀。膝盖不要内扣。',
+        sets: '3组 x 12-15次',
+        videos: [
+          { label: '抖音搜：自重深蹲正确姿势', url: DY + '自重深蹲正确姿势' },
+        ]
+      },
+      {
+        name: '保加利亚分腿蹲',
+        detail: '后脚搭在椅子或沙发上，前脚下蹲至大腿平行地面。练臀腿神器。',
+        sets: '3组 x 8-10次（每侧）',
+        videos: [
+          { label: '抖音搜：保加利亚分腿蹲教程', url: DY + '保加利亚分腿蹲教程' },
+        ]
+      },
+      {
+        name: '臀桥',
+        detail: '仰卧屈膝，脚掌踩地，用臀部发力将骨盆顶起至身体呈直线。',
+        sets: '3组 x 12-15次',
+        videos: [
+          { label: '抖音搜：臀桥标准做法', url: DY + '臀桥标准做法' },
+        ]
+      },
+      {
+        name: '平板支撑',
+        detail: '前臂撑地，身体呈直线，收紧腹部。不要塌腰。',
+        sets: '3组 x 20-40秒',
+        videos: [
+          { label: '抖音搜：平板支撑标准动作', url: DY + '平板支撑标准动作' },
+        ]
+      },
+      {
+        name: '死虫式',
+        detail: '仰卧，手臂和腿伸直朝上，对侧手脚同时缓慢下放，收紧核心。',
+        sets: '2组 x 10次（每侧）',
+        videos: [
+          { label: '抖音搜：死虫式 核心训练', url: DY + '死虫式 核心训练' },
+        ]
+      },
+    ]
+  },
+  wed: {
+    focus: '休息',
+    title: '周三：主动休息',
+    tip: '',
+    exercises: []
+  },
+  thu: {
+    focus: '【上肢日】胸 + 背 + 手臂（同周一）',
+    title: '周四：上肢日',
+    tip: '和周一同样的动作。经过周一和周三的恢复，今天应该能做更好。如果觉得轻松，可以试着做标准俯卧撑代替跪姿。',
+    exercises: [
+      {
+        name: '跪姿俯卧撑（或尝试标准俯卧撑）',
+        detail: '如果周一做得轻松，今天试着做标准俯卧撑。撑不住就回到跪姿，没问题。',
+        sets: '3组 x 8-12次',
+        videos: [
+          { label: '抖音搜：跪姿俯卧撑教程', url: DY + '跪姿俯卧撑教程' },
+          { label: '抖音搜：标准俯卧撑教学', url: DY + '标准俯卧撑教学' },
+        ]
+      },
+      {
+        name: '门框划船',
+        detail: '同周一。今天试着加大后倾角度，增加难度。',
+        sets: '3组 x 力竭',
+        videos: [
+          { label: '抖音搜：门框划船 练背', url: DY + '门框划船 练背' },
+        ]
+      },
+      {
+        name: '椅子臂屈伸',
+        detail: '同周一。今天试着做慢一点，下落3秒推起1秒。',
+        sets: '3组 x 8-12次',
+        videos: [
+          { label: '抖音搜：椅子臂屈伸 三头肌', url: DY + '椅子臂屈伸 三头肌' },
+        ]
+      },
+      {
+        name: '超人式',
+        detail: '同周一。试着在最高点多保持1秒。',
+        sets: '2组 x 10次（保持3秒）',
+        videos: [
+          { label: '抖音搜：超人式 背部激活', url: DY + '超人式 背部激活' },
+        ]
+      },
+    ]
+  },
+  fri: {
+    focus: '【下肢日】臀 + 腿 + 核心（同周二）',
+    title: '周五：下肢日',
+    tip: '和周二同样的动作。今天可以试着每组多做1-2次，或者做慢一点增加控制。',
+    exercises: [
+      {
+        name: '自重深蹲',
+        detail: '同周二。今天试着做慢一点，下落3秒站起1秒。',
+        sets: '3组 x 12-15次',
+        videos: [
+          { label: '抖音搜：自重深蹲正确姿势', url: DY + '自重深蹲正确姿势' },
+        ]
+      },
+      {
+        name: '保加利亚分腿蹲',
+        detail: '同周二。如果稳定了，试着不扶椅子做。',
+        sets: '3组 x 8-10次（每侧）',
+        videos: [
+          { label: '抖音搜：保加利亚分腿蹲教程', url: DY + '保加利亚分腿蹲教程' },
+        ]
+      },
+      {
+        name: '臀桥',
+        detail: '同周二。试着在顶部夹臀保持2秒再放下。',
+        sets: '3组 x 12-15次',
+        videos: [
+          { label: '抖音搜：臀桥标准做法', url: DY + '臀桥标准做法' },
+        ]
+      },
+      {
+        name: '平板支撑',
+        detail: '同周二。试着比周二多撑5秒。',
+        sets: '3组 x 20-40秒',
+        videos: [
+          { label: '抖音搜：平板支撑标准动作', url: DY + '平板支撑标准动作' },
+        ]
+      },
+      {
+        name: '死虫式',
+        detail: '同周二。试着放慢动作，控制核心稳定。',
+        sets: '2组 x 10次（每侧）',
+        videos: [
+          { label: '抖音搜：死虫式 核心训练', url: DY + '死虫式 核心训练' },
+        ]
+      },
+    ]
+  },
+  sat: {
+    focus: '【全身HIIT】周末燃脂',
+    title: '周六：全身HIIT循环',
+    tip: '今天不做力量，纯粹燃脂。每个动作40秒工作、20秒休息，做完一轮休息2分钟，做2-3轮。',
+    exercises: [
+      {
+        name: '开合跳',
+        detail: '持续40秒。跳不动就改为踏步开合。',
+        sets: '40秒 / 20秒休息',
+        videos: [
+          { label: '抖音搜：开合跳燃脂', url: DY + '开合跳燃脂' },
+        ]
+      },
+      {
+        name: '深蹲',
+        detail: '40秒内做尽量多次。累了就慢做，保持动作质量。',
+        sets: '40秒 / 20秒休息',
+        videos: [
+          { label: '抖音搜：深蹲正确姿势教学', url: DY + '深蹲正确姿势教学' },
+        ]
+      },
+      {
+        name: '跪姿俯卧撑',
+        detail: '40秒内做尽量多次。做不动就休息几秒再继续。',
+        sets: '40秒 / 20秒休息',
+        videos: [
+          { label: '抖音搜：跪姿俯卧撑教程', url: DY + '跪姿俯卧撑教程' },
+        ]
+      },
+      {
+        name: '高抬腿',
+        detail: '原地快速高抬腿40秒。膝盖尽量抬高。',
+        sets: '40秒 / 20秒休息',
+        videos: [
+          { label: '抖音搜：高抬腿燃脂', url: DY + '高抬腿燃脂' },
+        ]
+      },
+      {
+        name: '平板支撑',
+        detail: '40秒。撑不住可放膝盖（半平板）。',
+        sets: '40秒 / 20秒休息',
+        videos: [
+          { label: '抖音搜：平板支撑标准动作', url: DY + '平板支撑标准动作' },
+        ]
+      },
+      {
+        name: '臀桥',
+        detail: '40秒内尽量多次，顶部夹臀。',
+        sets: '40秒 / 休息2分钟 然后重复第2轮',
+        videos: [
+          { label: '抖音搜：臀桥标准做法', url: DY + '臀桥标准做法' },
+        ]
+      },
+    ]
+  },
+  sun: {
+    focus: '休息',
+    title: '周日：主动休息',
+    tip: '',
+    exercises: []
+  }
+};
+
+function showDay(day) {
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.day-tab[data-day="${day}"]`).classList.add('active');
+
+  const data = workouts[day];
+  const container = document.getElementById('workoutContent');
+
+  if (day === 'sun' || day === 'wed') {
+    const restEmoji = day === 'sun' ? '😌' : '💪';
+    const restMsg = day === 'sun'
+      ? '今天不训练。做做拉伸、散散步、或者彻底躺平。身体需要恢复才能变得更强。'
+      : '休息日。你的肌肉正在修复和生长。今天什么都不用做。';
+    container.innerHTML = `
+      <div class="rest-card">
+        <div class="emoji">${restEmoji}</div>
+        <h2>${data.title}</h2>
+        <p>${restMsg}</p>
+        <p style="margin-top:12px;font-size:13px;color:#a0aec0">如果实在想动，就做 10 分钟散步或拉伸</p>
+      </div>
+    `;
+    return;
+  }
+
+  let html = `
+    <div class="workout-card">
+      <div class="focus-area">${data.focus}</div>
+      <h2>${data.title}</h2>
+      <div class="tip">${data.tip}</div>
+  `;
+
+  data.exercises.forEach((ex, i) => {
+    html += `
+      <div class="exercise">
+        <div class="name">${i+1}. ${ex.name}</div>
+        <div class="detail">${ex.detail}</div>
+        <div class="sets">${ex.sets}</div>
+        <div class="video-links">
+          ${ex.videos.map(v => `<a href="${v.url}" target="_blank" class="video-link">▶ ${v.label}</a>`).join('')}
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+showDay('mon');
+</script>
+</body>
+</html>
